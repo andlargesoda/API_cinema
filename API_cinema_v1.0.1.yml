@@ -21,7 +21,7 @@ servers:
   - url: https://api.iskorkacinema.ru/v1
     description: Сервер API продуктивной среды
 paths:
-  /sessions/{sessionsId}/seats:
+  /sessions/{sessionId}/seats:
     get:
       summary: Проверка доступных мест
       description: Метод предназначен для получения списка свободных мест для выбранного сеанса
@@ -110,7 +110,7 @@ paths:
                     $ref: '#/components/schemas/Status'                                                                                                      
         '400':
           $ref: '#/components/responses/BadRequest'
-  /bookings/{bookingsId}:
+  /bookings/{bookingId}:
     delete:
       summary: Отмена бронирования
       description: Метод предназначен для отмены существующего бронирования
@@ -136,7 +136,7 @@ paths:
                     $ref: '#/components/schemas/Status'                                           
         '404':
           $ref: '#/components/responses/NotFound'                               
-  /sessions/{sessionsId}:
+  /sessions/{sessionId}:
     patch:
       summary: Изменение время сеанса
       description: Метод предназначен для изменения время сеансы администратором кинотеатра
