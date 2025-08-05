@@ -1,0 +1,334 @@
+openapi: '3.0.3'
+info:
+  title: "Кинотеатр «Искорка» API"
+  description: "Описание сервиса кинотеатра Искорка. При помощи сервиса можно проверить наличие мест на сеанс, забронировать место, отменить бронь, изменить время сеанса"
+  version: '1.0'
+  termsOfService: "https://iskorkacinema.ru/terms"
+  contact:
+    name: "Команда поддержки API"
+    url: "https.//iskorkacinema.ru/support"
+    email: "support@iskorkacinema.ru"
+  license:
+    name: "unlicensed"
+    url: "https.//www.example.ru"
+servers:
+  - url: https://dev-api.iskorkacinema.ru/v1
+    description: Сервер API среды разработки
+  - url: https://test-api.iskorkacinema.ru/v1
+    description: Сервер API среды тестирования
+  - url: https://preprod-api.iskorkacinema.ru/v1
+    description: Сервер API предпродуктивной среды
+  - url: https://api.iskorkacinema.ru/v1
+    description: Сервер API продуктивной среды
+paths:
+  /sessions/{sessionsId}/seats:
+    get:
+      summary: Проверка доступных мест
+      description: Метод предназначен для получения списка свободных мест для выбранного сеанса
+      tags:
+        - Сеансы
+      parameters:
+        - name: sessionId
+          in: path
+          description: Идентификатор сеанса
+          required: true
+          schema:
+            $ref: '#/components/schemas/SessionId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Информация о сеансе
+                properties:
+                  sessionId:
+                    $ref: '#/components/schemas/SessionId'
+                  movieId:
+                    $ref: '#/components/schemas/MovieId'
+                  hallId:
+                    $ref: '#/components/schemas/HallId'
+                  sessionDate:
+                    $ref: '#/components/schemas/SessionDate'
+                  sessionStartTime:
+                    $ref: '#/components/schemas/SessionStartTime'
+                  sessionEndTime:
+                    $ref: '#/components/schemas/SessionEndTime'
+                  sessionFormat:
+                    $ref: '#/components/schemas/SessionFormat'
+                  numberAvailableSeats:
+                    $ref: '#/components/schemas/NumberAvailableSeats'
+                  numberSelectedSeats:
+                    $ref: '#/components/schemas/NumberSelectedSeats'
+                  numberOccupiedSeats:
+                    $ref: '#/components/schemas/NumberOccupiedSeats'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /bookings:
+    post:
+      summary: Бронирование места 
+      description: Метод предназначен для бронирования места на сеансе
+      tags:
+        - Брони
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Данные бронирования от пользователя
+              properties:
+                sessionId:
+                  $ref: '#/components/schemas/SessionId'           
+                seatId:
+                  $ref: '#/components/schemas/SeatId' 
+                userId:
+                  $ref: '#/components/schemas/UserId'  
+      responses:
+        '201':
+          description: Бронь успешно создана
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Информация о бронировании
+                properties:
+                  bookingId:
+                    $ref: '#/components/schemas/BookingId'
+                  userId:
+                    $ref: '#/components/schemas/UserId' 
+                  sessionId:
+                    $ref: '#/components/schemas/SessionId' 
+                  bookingDatetime:
+                    $ref: '#/components/schemas/BookingDatetime'
+                  numberTicketsBooked:
+                    $ref: '#/components/schemas/NumberTicketsBooked'
+                  totalCostBooking:
+                    $ref: '#/components/schemas/TotalCostBooking'
+                  status:
+                    $ref: '#/components/schemas/Status'                                                                                                      
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /bookings/{bookingsId}:
+    delete:
+      summary: Отмена бронирования
+      description: Метод предназначен для отмены существующего бронирования
+      tags:
+        - Брони
+      parameters:
+        - name: bookingId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/BookingId'
+      responses:
+        '204':
+          description: Бронирование успешно отмененено
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  schema:
+                    $ref: '#/components/schemas/BookingId'
+                  status:
+                    $ref: '#/components/schemas/Status'                                           
+        '404':
+          $ref: '#/components/responses/NotFound'                               
+  /sessions/{sessionsId}:
+    patch:
+      summary: Изменение время сеанса
+      description: Метод предназначен для изменения время сеансы администратором кинотеатра
+      security:
+        - OAuth: [admin]
+      tags:
+        - Сеансы
+      parameters:
+        - name: sessionId
+          in: path
+          description: Идентификатор сеанса
+          required: true
+          schema:
+            $ref: '#/components/schemas/SessionId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Информация о сеансе
+              properties:
+                sessionDate:
+                  $ref: '#/components/schemas/SessionDate'
+                sessionStartTime:
+                  $ref: '#/components/schemas/SessionStartTime'
+                sessionEndTime:
+                    $ref: '#/components/schemas/SessionEndTime'              
+      responses:
+        '200':
+          description: Время сеанса успешно обновлено
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Информация о сеансе
+                properties:
+                  sessionId:
+                    $ref: '#/components/schemas/SessionId'
+                  movieId:
+                    $ref: '#/components/schemas/MovieId'
+                  hallId:
+                    $ref: '#/components/schemas/HallId'
+                  sessionDate:
+                    $ref: '#/components/schemas/SessionDate'
+                  sessionStartTime:
+                    $ref: '#/components/schemas/SessionStartTime'
+                  sessionEndTime:
+                    $ref: '#/components/schemas/SessionEndTime'
+                  sessionFormat:
+                    $ref: '#/components/schemas/SessionFormat'
+                  numberAvailableSeats:
+                    $ref: '#/components/schemas/NumberAvailableSeats'
+                  numberSelectedSeats:
+                    $ref: '#/components/schemas/NumberSelectedSeats'
+                  numberOccupiedSeats:
+                    $ref: '#/components/schemas/NumberOccupiedSeats'
+        '401':
+          $ref: '#/components/responses/Unauthorized'   
+        '403':
+          $ref: '#/components/responses/Forbidden'    
+        '404':
+          $ref: '#/components/responses/NotFound'                                              
+components:
+  schemas:
+    SessionId:
+      type: integer
+      format: int64
+      description: Идентификатор сеанса
+      example: 123
+    MovieId:
+      type: integer
+      format: int64
+      description: Идентификатор фильма
+      example: 456
+    HallId:
+      type: integer
+      format: int64
+      description: Идентификатор зала
+      example: 1   
+    SessionDate:
+      type: string
+      format: date
+      description: Дата сеанса
+    SessionStartTime:
+      type: string
+      format: date-time
+      description: Время начала сеанса
+    SessionEndTime:
+      type: string
+      format: date-time
+      description: Время завершения сеанса
+    SessionFormat:
+      type: string
+      description: Формат сеанса
+      enum:
+        - 2D
+        - 3D
+    NumberAvailableSeats:
+      type: integer
+      description: Количество свободных мест
+      example: 12
+    NumberSelectedSeats:
+      type: integer
+      description: Количество выбранных мест
+      example: 5
+    NumberOccupiedSeats:
+      type: integer
+      description: Количество занятых мест
+      example: 42
+    SeatId:
+      type: integer
+      format: int64
+      description: Идентификатор места
+      example: 12312
+    UserId:
+      type: integer
+      format: int64
+      description: Идентификатор пользователя
+      example: 123    
+    BookingId:
+      type: integer
+      format: int64
+      description: Идентификатор бронирования
+      example: 101112
+    BookingDatetime:
+      type: string
+      format: date-time
+      description: Дата и время бронирования
+    NumberTicketsBooked:
+      type: integer
+      description: Количество забронированных билетов
+      example: 2
+    TotalCostBooking:
+      type: string
+      description: Общая стоимость бронирования
+      example: "900.00"
+    Status:
+      type: integer
+      description: Статус
+      enum:
+        - confirmed
+        - canceled    
+  responses:
+    BadRequest:
+      description: Неправильный, некорректный запрос
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: 400
+              message:
+                type: string
+                example: Неправильный, некорректный запрос
+    Unauthorized:
+      description: Не авторизован
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: 401
+              message:
+                type: string
+                example: Не авторизован
+    Forbidden:
+      description: Запрещено (не уполномочен)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: 403
+              message:
+                type: string
+                example: Запрещено (не уполномочен)
+    NotFound:
+      description: Не найдено
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: 404
+              message:
+                type: string
+                example: Не найдено     
