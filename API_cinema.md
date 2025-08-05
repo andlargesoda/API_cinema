@@ -254,3 +254,4 @@
 ### Решение 2
 
 Спецификация OpenAPI, сформированная при помощи Swagger приведена по ссылке:
+[Спецификация OpenAPI](https://github.com/andlargesoda/API_cinema/blob/main/API_cinema_v1.0.1.yml)
