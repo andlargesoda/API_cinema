@@ -68,93 +68,93 @@
 
 Информация о забронированных местах
 
-| Имя                  | Тип                                     | Описание поля                        |
-|----------------------|-----------------------------------------|--------------------------------------|
-| bookingID            | integer                                 | идентификатор бронирования           |
-| userID               | integer                                 | ссылка на идентификатор пользователя |
-| sessionID            | integer                                 | ссылка на идентификатор сеанса       |
-| bookingDateTime      | string (format: DateTime)               | дата и время бронирования            |
-| numberTicketsBooked  | integer                                 | кол-во забронированных билетов       |
-| totalCostBooking     | string (format: Money)                  | общая стоимость бронирования         |
-| status               | String: enum (“confirmed”, “canceled”)  | статус                               |
+| Имя                  | Тип                                              | Описание поля                        |
+|----------------------|--------------------------------------------------|--------------------------------------|
+| bookingID            | integer                                          | идентификатор бронирования           |
+| userID               | integer                                          | ссылка на идентификатор пользователя |
+| sessionID            | integer                                          | ссылка на идентификатор сеанса       |
+| bookingDateTime      | string (format: DateTime)                        | дата и время бронирования            |
+| numberTicketsBooked  | integer                                          | кол-во забронированных билетов       |
+| totalCostBooking     | string (format: Money)                           | общая стоимость бронирования         |
+| status               | String: enum (“confirmed”, “canceled”)           | статус                               |
 
-2.	фильмы/movies
+2.	фильмы/movies         
 
-Информация о фильмах
+Информация о фильмах         
 
-| Имя                  | Тип                                     | Описание поля                        |
-|----------------------|-----------------------------------------|--------------------------------------|
-| movieID              | integer                                 | идентификатор фильма                 |
-| genre                | string                                  | жанр                                 |
-| countryProduction    | string                                  | страна производства                  |
-| yearProduction       | string (format: Year)                   | год выхода                           |
-| releaseDate          | string (format: Date)                   | дата выхода                          |
-| ageRating            | String: enum (“6+”, “12+”,”16+”, “18+”) | возрастной рейтинг                   |
-| duration             | integer                                 | продолжительность, мин               |
-| plot                 | string                                  | сюжет                                |
+| Имя                  | Тип                                              | Описание поля                        |
+|----------------------|--------------------------------------------------|--------------------------------------|
+| movieID              | integer                                          | идентификатор фильма                 |
+| genre                | string                                           | жанр                                 |
+| countryProduction    | string                                           | страна производства                  |
+| yearProduction       | string (format: Year)                            | год выхода                           |
+| releaseDate          | string (format: Date)                            | дата выхода                          |
+| ageRating            | String: enum (“6+”, “12+”,”16+”, “18+”)          | возрастной рейтинг                   |
+| duration             | integer                                          | продолжительность, мин               |
+| plot                 | string                                           | сюжет                                |
 
-3.	cеансы/sessions
+3.	cеансы/sessions         
 
-Информация о сеансах
+Информация о сеансах         
 
-| Имя                  | Тип                                     | Описание поля                        |
-|----------------------|-----------------------------------------|--------------------------------------|
-| sessionID            | integer                                 | идентификатор сеанса                 |
-| movieID              | integer                                 | ссылка на идентификатор фильма       |
-| hallID               | Integer                                 | ссылка на идентификатор зала         |
-| sessionDate          | string (format: Date)                   | дата сеанса                          |
-| sessionStartTime     | string (format: Time)                   | время начала сеанса                  |
-| sessionEndTime       | string (format: Time)                   | время конца сеанса                   |
-| sessionFormat        | String: enum (“2D”, “3D”)               | формат сеанса                        |
-| numberAvailableSeats | integer                                 | количество свободных мест            |
-| numberSelectedSeats  | integer                                 | количество выбранных мест            |
-| numberOccupiedSeats  | integer                                 | количество занятых мест              |
+| Имя                  | Тип                                              | Описание поля                        |
+|----------------------|--------------------------------------------------|--------------------------------------|
+| sessionID            | integer                                          | идентификатор сеанса                 |
+| movieID              | integer                                          | ссылка на идентификатор фильма       |
+| hallID               | Integer                                          | ссылка на идентификатор зала         |
+| sessionDate          | string (format: Date)                            | дата сеанса                          |
+| sessionStartTime     | string (format: Time)                            | время начала сеанса                  |
+| sessionEndTime       | string (format: Time)                            | время конца сеанса                   |
+| sessionFormat        | String: enum (“2D”, “3D”)                        | формат сеанса                        |
+| numberAvailableSeats | integer                                          | количество свободных мест            |
+| numberSelectedSeats  | integer                                          | количество выбранных мест            |
+| numberOccupiedSeats  | integer                                          | количество занятых мест              |
 
-4.	пользователи/users
+4.	пользователи/users         
 
-Информация о пользователях
+Информация о пользователях         
 
-| Имя                  | Тип                                     | Описание поля                        |
-|----------------------|-----------------------------------------|--------------------------------------|
-| userID               | integer                                 | идентификатор пользователя           |
-| userName             | string (format: Name)                   | ФИО пользователя                     |
-| dateOfBirth          | string (format: Date)                   | дата рождения                        |
-| phone                | string (format: phone)                  | телефон                              |
-| email                | string (format: email)                  | email                                |
+| Имя                  | Тип                                              | Описание поля                        |
+|----------------------|--------------------------------------------------|--------------------------------------|
+| userID               | integer                                          | идентификатор пользователя           |
+| userName             | string (format: Name)                            | ФИО пользователя                     |
+| dateOfBirth          | string (format: Date)                            | дата рождения                        |
+| phone                | string (format: phone)                           | телефон                              |
+| email                | string (format: email)                           | email                                |
 
-5.	залы/halls
+5.	залы/halls         
 
-Информация о залах кинотеатра
+Информация о залах кинотеатра         
 
-| Имя                  | Тип                                     | Описание поля                            |
-|----------------------|-----------------------------------------|------------------------------------------|
-| hallID               | integer                                 | идентификатор зала                       |
-| hallName             | string (format: Name)                   | название зала                            |
-| capacity             | string (format: Date)                   | количество мест                          |
-| hallType             | string (enum: IMAX, VIP, Standart)      | тип зала (список: IMAX, VIP, Стандартный)|
+| Имя                  | Тип                                              | Описание поля                            |
+|----------------------|--------------------------------------------------|------------------------------------------|
+| hallID               | integer                                          | идентификатор зала                       |
+| hallName             | string (format: Name)                            | название зала                            |
+| capacity             | string (format: Date)                            | количество мест                          |
+| hallType             | string (enum: IMAX, VIP, Standart)               | тип зала (список: IMAX, VIP, Стандартный)|
 
 6.	места/seats
 
 Информация о местах в зале кинотеатра
 
-| Имя        | Тип                                              | Описание поля                                          |
-|------------|--------------------------------------------------|--------------------------------------------------------|
-| seatID     | integer                                          | ссылка на идентификатор меcта                          |
-| hallID     | integer                                          | идентификатор зала                                     |
-| rowNumber  | integer                                          | номер ряда                                             |
-| seatNumber | integer                                          | номер места                                            |
-| seatType   | string, (enum: chair, sofa, disabledPersonChair) | тип места (список: кресло, диван, место для инвалидов) |
-| seatPrice  | string (format: Money)                           | стоимость места                                        |
+| Имя                  | Тип                                              | Описание поля                                          |
+|----------------------|--------------------------------------------------|--------------------------------------------------------|
+| seatID               | integer                                          | ссылка на идентификатор меcта                          |
+| hallID               | integer                                          | идентификатор зала                                     |
+| rowNumber            | integer                                          | номер ряда                                             |
+| seatNumber           | integer                                          | номер места                                            |
+| seatType             | string, (enum: chair, sofa, disabledPersonChair) | тип места (список: кресло, диван, место для инвалидов) |
+| seatPrice            | string (format: Money)                           | стоимость места                                        |
 
 7.	занятые места/occupiedSeats
 
 Связь между бронями и местами
 
-| Имя              | Тип     | Описание поля                        |
-|------------------|---------|--------------------------------------|
-| occupiedSeats ID | integer | идентификатор занятого места         |
-| bookingID        | integer | ссылка на идентификатор бронирования |
-| seatID           | integer | ссылка на идентификатор места        |
+| Имя                  | Тип                                              | Описание поля                                          |
+|----------------------|--------------------------------------------------|--------------------------------------------------------|
+| occupiedSeats ID     | integer                                          | идентификатор занятого места                           |
+| bookingID            | integer                                          | ссылка на идентификатор бронирования                   |
+| seatID               | integer                                          | ссылка на идентификатор места                          |
 
 #### 2. Взаимодействие с API
 
@@ -178,10 +178,10 @@
 
 #### 5. Ресурсы API
 
-* GET/sessions{sessionID}/seats;
+* GET/sessions/{sessionID}/seats;
 * POST/bookings;
-* DELETE/bookings{bookingID};
-* PATCH/sessions{sessionID}.
+* DELETE/bookings/{bookingID};
+* PATCH/sessions/{sessionID}.
 
 #### 6. Параметры запросов и ответов для методов HTTP
 

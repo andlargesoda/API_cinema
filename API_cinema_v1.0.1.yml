@@ -43,6 +43,8 @@ paths:
                 type: object
                 description: Информация о сеансе
                 properties:
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
                   sessionId:
                     $ref: '#/components/schemas/SessionId'
                   movieId:
@@ -63,8 +65,41 @@ paths:
                     $ref: '#/components/schemas/NumberSelectedSeats'
                   numberOccupiedSeats:
                     $ref: '#/components/schemas/NumberOccupiedSeats'
+            application/xml:
+              schema:
+                type: object
+                description: Информация о сеансе
+                properties:
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'                
+                  sessionId:
+                    $ref: '#/components/schemas/SessionId'
+                  movieId:
+                    $ref: '#/components/schemas/MovieId'
+                  hallId:
+                    $ref: '#/components/schemas/HallId'
+                  sessionDate:
+                    $ref: '#/components/schemas/SessionDate'
+                  sessionStartTime:
+                    $ref: '#/components/schemas/SessionStartTime'
+                  sessionEndTime:
+                    $ref: '#/components/schemas/SessionEndTime'
+                  sessionFormat:
+                    $ref: '#/components/schemas/SessionFormat'
+                  numberAvailableSeats:
+                    $ref: '#/components/schemas/NumberAvailableSeats'
+                  numberSelectedSeats:
+                    $ref: '#/components/schemas/NumberSelectedSeats'
+                  numberOccupiedSeats:
+                    $ref: '#/components/schemas/NumberOccupiedSeats'  
+                xml:
+                  name: user
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '404':
-          $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/NotFound'    
+        '500':
+          $ref: '#/components/responses/InternalServerError' 
   /bookings:
     post:
       summary: Бронирование места 
@@ -84,7 +119,20 @@ paths:
                 seatId:
                   $ref: '#/components/schemas/SeatId' 
                 userId:
-                  $ref: '#/components/schemas/UserId'  
+                  $ref: '#/components/schemas/UserId'
+          application/xml:
+            schema:
+              type: object
+              description: Данные бронирования от пользователя
+              properties:
+                sessionId:
+                  $ref: '#/components/schemas/SessionId'           
+                seatId:
+                  $ref: '#/components/schemas/SeatId' 
+                userId:
+                  $ref: '#/components/schemas/UserId'
+              xml:
+                name: user                         
       responses:
         '201':
           description: Бронь успешно создана
@@ -107,9 +155,34 @@ paths:
                   totalCostBooking:
                     $ref: '#/components/schemas/TotalCostBooking'
                   status:
-                    $ref: '#/components/schemas/Status'                                                                                                      
+                    $ref: '#/components/schemas/Status'
+            application/xml:
+              schema:
+                type: object
+                description: Информация о бронировании
+                properties:
+                  bookingId:
+                    $ref: '#/components/schemas/BookingId'
+                  userId:
+                    $ref: '#/components/schemas/UserId' 
+                  sessionId:
+                    $ref: '#/components/schemas/SessionId' 
+                  bookingDatetime:
+                    $ref: '#/components/schemas/BookingDatetime'
+                  numberTicketsBooked:
+                    $ref: '#/components/schemas/NumberTicketsBooked'
+                  totalCostBooking:
+                    $ref: '#/components/schemas/TotalCostBooking'
+                  status:
+                    $ref: '#/components/schemas/Status'
+                xml:
+                  name: user                                                                                                                              
         '400':
           $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'    
+        '500':
+          $ref: '#/components/responses/InternalServerError'            
   /bookings/{bookingId}:
     delete:
       summary: Отмена бронирования
@@ -133,9 +206,23 @@ paths:
                   schema:
                     $ref: '#/components/schemas/BookingId'
                   status:
-                    $ref: '#/components/schemas/Status'                                           
+                    $ref: '#/components/schemas/Status'
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  schema:
+                    $ref: '#/components/schemas/BookingId'
+                  status:
+                    $ref: '#/components/schemas/Status'
+                xml:
+                  name: user                                                                   
+        '400':
+          $ref: '#/components/responses/BadRequest'          
         '404':
-          $ref: '#/components/responses/NotFound'                               
+          $ref: '#/components/responses/NotFound'    
+        '500':
+          $ref: '#/components/responses/InternalServerError'                                       
   /sessions/{sessionId}:
     patch:
       summary: Изменение время сеанса
@@ -163,7 +250,20 @@ paths:
                 sessionStartTime:
                   $ref: '#/components/schemas/SessionStartTime'
                 sessionEndTime:
-                    $ref: '#/components/schemas/SessionEndTime'              
+                  $ref: '#/components/schemas/SessionEndTime'
+          application/xml:
+            schema:
+              type: object
+              description: Информация о сеансе
+              properties:
+                sessionDate:
+                  $ref: '#/components/schemas/SessionDate'
+                sessionStartTime:
+                  $ref: '#/components/schemas/SessionStartTime'
+                sessionEndTime:
+                  $ref: '#/components/schemas/SessionEndTime'
+              xml:
+                name: user                 
       responses:
         '200':
           description: Время сеанса успешно обновлено
@@ -193,14 +293,67 @@ paths:
                     $ref: '#/components/schemas/NumberSelectedSeats'
                   numberOccupiedSeats:
                     $ref: '#/components/schemas/NumberOccupiedSeats'
+            application/xml:
+              schema:
+                type: object
+                description: Информация о сеансе
+                properties:
+                  sessionId:
+                    $ref: '#/components/schemas/SessionId'
+                  movieId:
+                    $ref: '#/components/schemas/MovieId'
+                  hallId:
+                    $ref: '#/components/schemas/HallId'
+                  sessionDate:
+                    $ref: '#/components/schemas/SessionDate'
+                  sessionStartTime:
+                    $ref: '#/components/schemas/SessionStartTime'
+                  sessionEndTime:
+                    $ref: '#/components/schemas/SessionEndTime'
+                  sessionFormat:
+                    $ref: '#/components/schemas/SessionFormat'
+                  numberAvailableSeats:
+                    $ref: '#/components/schemas/NumberAvailableSeats'
+                  numberSelectedSeats:
+                    $ref: '#/components/schemas/NumberSelectedSeats'
+                  numberOccupiedSeats:
+                    $ref: '#/components/schemas/NumberOccupiedSeats'  
+                xml:
+                  name: user                                      
+        '400':
+          $ref: '#/components/responses/BadRequest'         
         '401':
           $ref: '#/components/responses/Unauthorized'   
         '403':
           $ref: '#/components/responses/Forbidden'    
         '404':
-          $ref: '#/components/responses/NotFound'                                              
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'                                                
 components:
   schemas:
+    Pagination:
+      type: object
+      description: Получение списка элементов с пагинацией
+      required:
+        - limit
+        - offset
+        - totalCount
+      properties:
+        limit:
+          type: integer
+          description: Количество элементов на странице
+          minimum: 1
+          maximum: 100
+          default: 10
+        offset:
+          type: integer
+          description: Смещение (начальная позиция)
+          minimum: 0
+          default: 0
+        totalCount:
+          type: integer
+          description: Общее количество элементов        
     SessionId:
       type: integer
       format: int64
@@ -274,11 +427,22 @@ components:
       description: Общая стоимость бронирования
       example: "900.00"
     Status:
-      type: integer
+      type: string
       description: Статус
       enum:
         - confirmed
         - canceled    
+  securitySchemes:
+    OAuth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: "https://iskorkacinema.ru/oauth/authorize"
+          tokenUrl: "https://iskorkacinema.ru/oauth/token" 
+          scopes:
+            admin: "Полный доступ администратора"
+            read: "Чтение"
+            write: "Чтение и запись"      
   responses:
     BadRequest:
       description: Неправильный, некорректный запрос
@@ -293,6 +457,18 @@ components:
               message:
                 type: string
                 example: Неправильный, некорректный запрос
+        application/xml:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: 400
+              message:
+                type: string
+                example: Неправильный, некорректный запрос
+            xml:
+              name: user                                 
     Unauthorized:
       description: Не авторизован
       content:
@@ -306,6 +482,18 @@ components:
               message:
                 type: string
                 example: Не авторизован
+        application/xml:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: 401
+              message:
+                type: string
+                example: Не авторизован    
+            xml:
+              name: user               
     Forbidden:
       description: Запрещено (не уполномочен)
       content:
@@ -319,6 +507,18 @@ components:
               message:
                 type: string
                 example: Запрещено (не уполномочен)
+        application/xml:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: 403
+              message:
+                type: string
+                example: Запрещено (не уполномочен)      
+            xml:
+              name: user                           
     NotFound:
       description: Не найдено
       content:
@@ -331,4 +531,41 @@ components:
                 example: 404
               message:
                 type: string
-                example: Не найдено     
+                example: Не найдено
+        application/xml:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: 404
+              message:
+                type: string
+                example: Не найдено
+            xml:
+              name: user                         
+    InternalServerError:
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: 500
+              message:
+                type: string
+                example: Внутренняя ошибка сервера
+        application/xml:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: 500
+              message:
+                type: string
+                example: Внутренняя ошибка сервера
+            xml:
+              name: user                 
