@@ -20,78 +20,108 @@ servers:
     description: Сервер API предпродуктивной среды
   - url: https://api.iskorkacinema.ru/v1
     description: Сервер API продуктивной среды
+tags:
+  - name: Сеансы
+    description: Управление сеансами в кинотеатре
+  - name: Брони
+    description: Управление бронями в кинотеатре
+  - name: Администратор
+    description: Действия администратора    
 paths:
-  /sessions/{sessionId}/seats:
+  # === Управление сеансами в кинотеатре ===
+  /sessions:
     get:
-      summary: Проверка доступных мест
-      description: Метод предназначен для получения списка свободных мест для выбранного сеанса
-      tags:
-        - Сеансы
+      summary: Получение списка сеансов
+      description: Метод предназначен для получения списка сеансов с описанием основной информации
+      tags: [Сеансы]
       parameters:
-        - name: sessionId
-          in: path
-          description: Идентификатор сеанса
-          required: true
+        - name: sessionDate
+          in: query
           schema:
-            $ref: '#/components/schemas/SessionId'
+            $ref: '#/components/schemas/SessionDate'
+        - name: sessionFormat
+          in: query
+          schema:
+            $ref: '#/components/schemas/SessionFormat'
+        - name: moviename
+          in: query
+          schema:
+            $ref: '#/components/schemas/MovieName'
+        - name: genre
+          in: query
+          schema:
+            $ref: '#/components/schemas/Genre'
+        - name: hallType
+          in: query
+          schema:
+            $ref: '#/components/schemas/HallType'
+        - name: hallName
+          in: query
+          schema:
+            $ref: '#/components/schemas/HallName'
+        - name: limit
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Limit'
+        - name: offset
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Offset'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                type: object
-                description: Информация о сеансе
-                properties:
-                  pagination:
-                    $ref: '#/components/schemas/Pagination'
-                  sessionId:
-                    $ref: '#/components/schemas/SessionId'
-                  movieId:
-                    $ref: '#/components/schemas/MovieId'
-                  hallId:
-                    $ref: '#/components/schemas/HallId'
-                  sessionDate:
-                    $ref: '#/components/schemas/SessionDate'
-                  sessionStartTime:
-                    $ref: '#/components/schemas/SessionStartTime'
-                  sessionEndTime:
-                    $ref: '#/components/schemas/SessionEndTime'
-                  sessionFormat:
-                    $ref: '#/components/schemas/SessionFormat'
-                  numberAvailableSeats:
-                    $ref: '#/components/schemas/NumberAvailableSeats'
-                  numberSelectedSeats:
-                    $ref: '#/components/schemas/NumberSelectedSeats'
-                  numberOccupiedSeats:
-                    $ref: '#/components/schemas/NumberOccupiedSeats'
+                type: array
+                items:
+                  $ref: '#/components/schemas/PagenatedSessions'
             application/xml:
               schema:
-                type: object
-                description: Информация о сеансе
-                properties:
-                  pagination:
-                    $ref: '#/components/schemas/Pagination'                
-                  sessionId:
-                    $ref: '#/components/schemas/SessionId'
-                  movieId:
-                    $ref: '#/components/schemas/MovieId'
-                  hallId:
-                    $ref: '#/components/schemas/HallId'
-                  sessionDate:
-                    $ref: '#/components/schemas/SessionDate'
-                  sessionStartTime:
-                    $ref: '#/components/schemas/SessionStartTime'
-                  sessionEndTime:
-                    $ref: '#/components/schemas/SessionEndTime'
-                  sessionFormat:
-                    $ref: '#/components/schemas/SessionFormat'
-                  numberAvailableSeats:
-                    $ref: '#/components/schemas/NumberAvailableSeats'
-                  numberSelectedSeats:
-                    $ref: '#/components/schemas/NumberSelectedSeats'
-                  numberOccupiedSeats:
-                    $ref: '#/components/schemas/NumberOccupiedSeats'  
+                type: array
+                items:
+                  $ref: '#/components/schemas/PagenatedSessions'
+                xml:
+                  name: user
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'    
+        '500':
+          $ref: '#/components/responses/InternalServerError'                                                            
+  /sessions/{sessionId}/seats:
+    get:
+      summary: Проверка доступных мест
+      description: Метод предназначен для получения информации о свободных местах для выбранного сеанса
+      tags: [Сеансы]
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/SessionId'
+        - name: limit
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Limit'
+        - name: offset
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Offset'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagenatedSeats'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/PagenatedSeats'
                 xml:
                   name: user
         '400':
@@ -100,12 +130,12 @@ paths:
           $ref: '#/components/responses/NotFound'    
         '500':
           $ref: '#/components/responses/InternalServerError' 
+  # === Управление бронями в кинотеатре ====
   /bookings:
     post:
       summary: Бронирование места 
       description: Метод предназначен для бронирования места на сеансе
-      tags:
-        - Брони
+      tags: [Брони]
       requestBody:
         required: true
         content:
@@ -139,42 +169,10 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                description: Информация о бронировании
-                properties:
-                  bookingId:
-                    $ref: '#/components/schemas/BookingId'
-                  userId:
-                    $ref: '#/components/schemas/UserId' 
-                  sessionId:
-                    $ref: '#/components/schemas/SessionId' 
-                  bookingDatetime:
-                    $ref: '#/components/schemas/BookingDatetime'
-                  numberTicketsBooked:
-                    $ref: '#/components/schemas/NumberTicketsBooked'
-                  totalCostBooking:
-                    $ref: '#/components/schemas/TotalCostBooking'
-                  status:
-                    $ref: '#/components/schemas/Status'
+                $ref: '#/components/schemas/Booking'
             application/xml:
               schema:
-                type: object
-                description: Информация о бронировании
-                properties:
-                  bookingId:
-                    $ref: '#/components/schemas/BookingId'
-                  userId:
-                    $ref: '#/components/schemas/UserId' 
-                  sessionId:
-                    $ref: '#/components/schemas/SessionId' 
-                  bookingDatetime:
-                    $ref: '#/components/schemas/BookingDatetime'
-                  numberTicketsBooked:
-                    $ref: '#/components/schemas/NumberTicketsBooked'
-                  totalCostBooking:
-                    $ref: '#/components/schemas/TotalCostBooking'
-                  status:
-                    $ref: '#/components/schemas/Status'
+                $ref: '#/components/schemas/Booking'
                 xml:
                   name: user                                                                                                                              
         '400':
@@ -187,8 +185,7 @@ paths:
     delete:
       summary: Отмена бронирования
       description: Метод предназначен для отмены существующего бронирования
-      tags:
-        - Брони
+      tags: [Брони]
       parameters:
         - name: bookingId
           in: path
@@ -223,18 +220,17 @@ paths:
           $ref: '#/components/responses/NotFound'    
         '500':
           $ref: '#/components/responses/InternalServerError'                                       
-  /sessions/{sessionId}:
+  # === Действия администратора ===
+  /admin/sessions/{sessionId}:
     patch:
       summary: Изменение время сеанса
       description: Метод предназначен для изменения время сеансы администратором кинотеатра
       security:
         - OAuth: [admin]
-      tags:
-        - Сеансы
+      tags: [Администратор]
       parameters:
         - name: sessionId
           in: path
-          description: Идентификатор сеанса
           required: true
           schema:
             $ref: '#/components/schemas/SessionId'
@@ -246,7 +242,7 @@ paths:
               description: Информация о сеансе
               properties:
                 sessionDate:
-                  $ref: '#/components/schemas/SessionDate'
+                  $ref: '#/components/schemas/SessionDate'               
                 sessionStartTime:
                   $ref: '#/components/schemas/SessionStartTime'
                 sessionEndTime:
@@ -257,7 +253,7 @@ paths:
               description: Информация о сеансе
               properties:
                 sessionDate:
-                  $ref: '#/components/schemas/SessionDate'
+                  $ref: '#/components/schemas/SessionDate'               
                 sessionStartTime:
                   $ref: '#/components/schemas/SessionStartTime'
                 sessionEndTime:
@@ -270,54 +266,10 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                description: Информация о сеансе
-                properties:
-                  sessionId:
-                    $ref: '#/components/schemas/SessionId'
-                  movieId:
-                    $ref: '#/components/schemas/MovieId'
-                  hallId:
-                    $ref: '#/components/schemas/HallId'
-                  sessionDate:
-                    $ref: '#/components/schemas/SessionDate'
-                  sessionStartTime:
-                    $ref: '#/components/schemas/SessionStartTime'
-                  sessionEndTime:
-                    $ref: '#/components/schemas/SessionEndTime'
-                  sessionFormat:
-                    $ref: '#/components/schemas/SessionFormat'
-                  numberAvailableSeats:
-                    $ref: '#/components/schemas/NumberAvailableSeats'
-                  numberSelectedSeats:
-                    $ref: '#/components/schemas/NumberSelectedSeats'
-                  numberOccupiedSeats:
-                    $ref: '#/components/schemas/NumberOccupiedSeats'
+                $ref: '#/components/schemas/Session'
             application/xml:
               schema:
-                type: object
-                description: Информация о сеансе
-                properties:
-                  sessionId:
-                    $ref: '#/components/schemas/SessionId'
-                  movieId:
-                    $ref: '#/components/schemas/MovieId'
-                  hallId:
-                    $ref: '#/components/schemas/HallId'
-                  sessionDate:
-                    $ref: '#/components/schemas/SessionDate'
-                  sessionStartTime:
-                    $ref: '#/components/schemas/SessionStartTime'
-                  sessionEndTime:
-                    $ref: '#/components/schemas/SessionEndTime'
-                  sessionFormat:
-                    $ref: '#/components/schemas/SessionFormat'
-                  numberAvailableSeats:
-                    $ref: '#/components/schemas/NumberAvailableSeats'
-                  numberSelectedSeats:
-                    $ref: '#/components/schemas/NumberSelectedSeats'
-                  numberOccupiedSeats:
-                    $ref: '#/components/schemas/NumberOccupiedSeats'  
+                $ref: '#/components/schemas/Session' 
                 xml:
                   name: user                                      
         '400':
@@ -332,6 +284,47 @@ paths:
           $ref: '#/components/responses/InternalServerError'                                                
 components:
   schemas:
+    PagenatedSessions:
+      type: object
+      properties:
+        data: 
+          type: array
+          items:
+            $ref: '#/components/schemas/Session'
+        pagination:
+          $ref: '#/components/schemas/Pagination'     
+    PagenatedSeats:
+      type: object
+      properties:
+        data: 
+          type: array
+          items:
+            $ref: '#/components/schemas/StatusSeats'
+        pagination:
+          $ref: '#/components/schemas/Pagination'    
+    AvailableSeats:
+      type: object
+      properties:
+        sessionId:
+          $ref: '#/components/schemas/SessionId'
+        seats:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatusSeats'
+    StatusSeats:
+      type:  object
+      properties:
+          seatId:
+            $ref: '#/components/schemas/SeatId'
+          rowNumber:
+            $ref: '#/components/schemas/RowNumber' 
+          seatNumber:
+            $ref: '#/components/schemas/SeatNumber'
+          status:
+            type: string
+            enum:
+              - available
+              - booked
     Pagination:
       type: object
       description: Получение списка элементов с пагинацией
@@ -340,39 +333,152 @@ components:
         - offset
         - totalCount
       properties:
-        limit:
-          type: integer
-          description: Количество элементов на странице
-          minimum: 1
-          maximum: 100
-          default: 10
-        offset:
-          type: integer
-          description: Смещение (начальная позиция)
-          minimum: 0
-          default: 0
-        totalCount:
-          type: integer
-          description: Общее количество элементов        
-    SessionId:
+        Limit:
+          $ref: '#/components/schemas/Limit'
+        Offset:
+          $ref: '#/components/schemas/Offset'
+        TotalCount:
+          $ref: '#/components/schemas/TotalCount'   
+    Limit:
       type: integer
-      format: int64
-      description: Идентификатор сеанса
-      example: 123
+      description: Количество элементов на странице
+      minimum: 1
+      maximum: 100
+      default: 10
+    Offset:
+      type: integer
+      description: Смещение (начальная позиция)
+      minimum: 0
+      default: 0
+    TotalCount:
+      type: integer
+      description: Общее количество элементов      
+    Movie:
+      type: object
+      description: Информация о фильме
+      properties:
+        MovieId:
+          $ref: '#/components/schemas/MovieId'
+        MovieName:
+          $ref: '#/components/schemas/MovieName'
+        Genre:
+          $ref: '#/components/schemas/Genre'
+        CountryProduction:
+          $ref: '#/components/schemas/CountryProduction'
+        ReleaseDate:
+          $ref: '#/components/schemas/ReleaseDate'
+        AgeRating:
+          $ref: '#/components/schemas/AgeRating'
+        Duration:
+          $ref: '#/components/schemas/Duration'
+        Plot:
+          $ref: '#/components/schemas/Plot'
     MovieId:
       type: integer
       format: int64
       description: Идентификатор фильма
-      example: 456
+      example: 456              
+    MovieName:
+      type: string
+      description: Наименование фильма
+      example: Интерстеллар            
+    Genre:
+      type: string
+      description: Жанр
+      example: Фантастика                
+    CountryProduction:
+      type: string
+      description: Страна производства
+      example: США    
+    ReleaseDate:
+      type: string
+      format: date
+      description: Год выхода
+      example: {}      
+    AgeRating:
+      type: string
+      enum:
+        - 6+
+        - 12+
+        - 16+
+        - 18+
+      description: Возрастной рейтинг
+      example: 16+            
+    Duration:
+      type: string
+      description: Продолжительность, мин
+      example: 140              
+    Plot:
+      type: string
+      description: Сюжет
+      example: Фильм о космчиеских путешествиях
+    Hall:
+      type: object
+      description: Информация о зале кинотеатра
+      properties:
+        HallId:
+          $ref: '#/components/schemas/HallId'
+        HallName:
+          $ref: '#/components/schemas/HallName'
+        Capacity:
+          $ref: '#/components/schemas/Capacity'
+        HallType:
+          $ref: '#/components/schemas/HallType'
     HallId:
       type: integer
       format: int64
       description: Идентификатор зала
-      example: 1   
+      example: 1  
+    HallName:
+      type: string
+      description: Название зала
+      example: Зал №2    
+    Capacity:
+      type: integer
+      description: Количество мест
+      example: 200     
+    HallType:
+      type: string
+      enum:
+        - IMAX
+        - VIP
+        - Standart
+      description: Тип зала
+      example: Standart                               
+    Session:
+      type: object
+      description: Информация о сеансе
+      properties:
+        SessionId:
+          $ref: '#/components/schemas/SessionId'
+        MovieId:
+          $ref: '#/components/schemas/MovieId'
+        HallId:
+          $ref: '#/components/schemas/HallId'
+        SessionDate:
+          $ref: '#/components/schemas/SessionDate'
+        SessionStartTime:
+          $ref: '#/components/schemas/SessionStartTime'
+        SessionEndTime:
+          $ref: '#/components/schemas/SessionEndTime'
+        SessionFormat:
+          $ref: '#/components/schemas/SessionFormat'
+        NumberAvailableSeats:
+          $ref: '#/components/schemas/NumberAvailableSeats'
+        NumberSelectedSeats:
+          $ref: '#/components/schemas/NumberSelectedSeats'
+        NumberOccupiedSeats:
+          $ref: '#/components/schemas/NumberOccupiedSeats'      
+    SessionId:
+      type: integer
+      format: int64
+      description: Идентификатор сеанса
+      example: 123  
     SessionDate:
       type: string
       format: date
       description: Дата сеанса
+      example: 2014-11-04
     SessionStartTime:
       type: string
       format: date-time
@@ -387,6 +493,7 @@ components:
       enum:
         - 2D
         - 3D
+      example: 2D
     NumberAvailableSeats:
       type: integer
       description: Количество свободных мест
@@ -399,22 +506,115 @@ components:
       type: integer
       description: Количество занятых мест
       example: 42
+    Seat:
+      type: object
+      description: Информация о месте в зале кинотеатра
+      required:
+        - SeatId
+        - HallId
+        - RowNumber
+        - SeatNumber
+        - SeatType
+        - SeatPrice
+      properties:
+        SeatId:
+          $ref: '#/components/schemas/SeatId'
+        HallId:
+          $ref: '#/components/schemas/HallId'
+        RowNumber:
+          $ref: '#/components/schemas/RowNumber'
+        SeatNumber:
+          $ref: '#/components/schemas/SeatNumber'
+        SeatType:
+          $ref: '#/components/schemas/SeatType'
+        SeatPrice:
+          $ref: '#/components/schemas/SeatPrice'
     SeatId:
       type: integer
       format: int64
       description: Идентификатор места
-      example: 12312
+      example: 12312      
+    RowNumber:
+      type: integer
+      description: Номер ряда
+      example: 3  
+    SeatNumber:
+      type: integer
+      description: Номер места
+      example: 12 
+    SeatType:
+      type: string
+      description: Тип места
+      enum:
+        - chair
+        - sofa
+        - disabledPersonChair   
+    SeatPrice:
+      type: string
+      description: Стоимость места
+      example: "550.00"     
+    User:
+      type: object
+      description: Информация о пользователе
+      properties:
+        UserId:
+          $ref: '#/components/schemas/UserId'
+        UserName:
+          $ref: '#/components/schemas/UserName'
+        DateOfBirth:
+          $ref: '#/components/schemas/DateOfBirth'
+        Phone:
+          $ref: '#/components/schemas/Phone'
     UserId:
       type: integer
       format: int64
       description: Идентификатор пользователя
-      example: 123    
+      example: 123         
+    UserName:
+      type: string
+      description: Имя пользователя
+      example: Иванов Иван       
+    DateOfBirth:
+      type: string
+      format: date
+      description: Дата рождения пользователя
+      example: 26     
+    Phone:
+      type: string
+      description: Номер телефона пользователя в международном формате
+      pattern: \+7\(9\d{2}\)\d{3}-\d{2}-\d{2}
+      example: +7(999)123-45-67          
+    Email:
+      type: string
+      format: email
+      description: Электронная почта пользователя
+      default: ivanovivan@mail.ru          
+    Booking:
+      type: object
+      description: Информация о бронировании
+      properties:
+        BookingId:
+          $ref: '#/components/schemas/BookingId'
+        UserId:
+          $ref: '#/components/schemas/UserId'
+        SessionId:
+          $ref: '#/components/schemas/HallId'
+        SeatId:
+          $ref: '#/components/schemas/SeatId'
+        BookingDateTime:
+          $ref: '#/components/schemas/BookingDateTime'
+        NumberTicketsBooked:
+          $ref: '#/components/schemas/NumberTicketsBooked'
+        TotalCostBooking:
+          $ref: '#/components/schemas/TotalCostBooking'
+        Status:
+          $ref: '#/components/schemas/Status'
     BookingId:
       type: integer
       format: int64
       description: Идентификатор бронирования
       example: 101112
-    BookingDatetime:
+    BookingDateTime:
       type: string
       format: date-time
       description: Дата и время бронирования

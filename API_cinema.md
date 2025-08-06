@@ -15,6 +15,7 @@
       - [4. HTTP методы API](#4-http-методы-api)
       - [5. Ресурсы API](#5-ресурсы-api)
       - [6. Параметры запросов и ответов для методов HTTP](#6-параметры-запросов-и-ответов-для-методов-http)
+    - [ER-диаграмма](#er-диаграмма)
     - [Решение 2, 3](#решение-2-3)
 
 ## Контекст задания
@@ -71,97 +72,89 @@
 
 #### 1. Структура хранения данных
 
-1.	брони/bookings
+1.	Информация о бронировании
 
-Информация о забронированных местах
+брони (bookings)
 
 | Имя                  | Тип                                              | Описание поля                        |
 |----------------------|--------------------------------------------------|--------------------------------------|
-| bookingID            | integer                                          | идентификатор бронирования           |
-| userID               | integer                                          | ссылка на идентификатор пользователя |
-| sessionID            | integer                                          | ссылка на идентификатор сеанса       |
-| bookingDateTime      | string (format: DateTime)                        | дата и время бронирования            |
+| bookingId            | integer                                          | идентификатор бронирования           |
+| userId               | integer                                          | ссылка на идентификатор пользователя |
+| sessionId            | integer                                          | ссылка на идентификатор сеанса       |
+| seatId               | integer                                          | ссылка на идентификатор места        |
+| bookingDateTime      | string (format: Date-Time)                       | дата и время бронирования            |
 | numberTicketsBooked  | integer                                          | кол-во забронированных билетов       |
 | totalCostBooking     | string (format: Money)                           | общая стоимость бронирования         |
 | status               | String: enum (“confirmed”, “canceled”)           | статус                               |
 
-2.	фильмы/movies         
+2.	Информация о фильме         
 
-Информация о фильмах         
+
+фильмы (movies)         
 
 | Имя                  | Тип                                              | Описание поля                        |
 |----------------------|--------------------------------------------------|--------------------------------------|
-| movieID              | integer                                          | идентификатор фильма                 |
+| movieId              | integer                                          | идентификатор фильма                 |
+| movieName            | string                                           | наименование фильма                  |
 | genre                | string                                           | жанр                                 |
 | countryProduction    | string                                           | страна производства                  |
-| yearProduction       | string (format: Year)                            | год выхода                           |
-| releaseDate          | string (format: Date)                            | дата выхода                          |
+| releaseDate          | string (format: date)                            | дата выхода                          |
 | ageRating            | String: enum (“6+”, “12+”,”16+”, “18+”)          | возрастной рейтинг                   |
 | duration             | integer                                          | продолжительность, мин               |
 | plot                 | string                                           | сюжет                                |
 
-3.	cеансы/sessions         
+3.	Информация о сеансе         
 
-Информация о сеансах         
+cеансы (sessions)         
 
 | Имя                  | Тип                                              | Описание поля                        |
 |----------------------|--------------------------------------------------|--------------------------------------|
-| sessionID            | integer                                          | идентификатор сеанса                 |
-| movieID              | integer                                          | ссылка на идентификатор фильма       |
-| hallID               | Integer                                          | ссылка на идентификатор зала         |
-| sessionDate          | string (format: Date)                            | дата сеанса                          |
-| sessionStartTime     | string (format: Time)                            | время начала сеанса                  |
-| sessionEndTime       | string (format: Time)                            | время конца сеанса                   |
+| sessionId            | integer                                          | идентификатор сеанса                 |
+| movieId              | integer                                          | ссылка на идентификатор фильма       |
+| hallId               | Integer                                          | ссылка на идентификатор зала         |
+| sessionDate          | string (format: date)                            | дата сеанса                          |
+| sessionStartTime     | string (format: date-Time)                       | дата и время начала сеанса           |
+| sessionEndTime       | string (format: date-Time)                       | дата и время конца сеанса            |
 | sessionFormat        | String: enum (“2D”, “3D”)                        | формат сеанса                        |
 | numberAvailableSeats | integer                                          | количество свободных мест            |
 | numberSelectedSeats  | integer                                          | количество выбранных мест            |
 | numberOccupiedSeats  | integer                                          | количество занятых мест              |
 
-4.	пользователи/users         
+4.	Информация о пользователе       
 
-Информация о пользователях         
+пользователи (users)         
 
 | Имя                  | Тип                                              | Описание поля                        |
 |----------------------|--------------------------------------------------|--------------------------------------|
-| userID               | integer                                          | идентификатор пользователя           |
+| userId               | integer                                          | идентификатор пользователя           |
 | userName             | string (format: Name)                            | ФИО пользователя                     |
-| dateOfBirth          | string (format: Date)                            | дата рождения                        |
+| dateOfBirth          | string (format: date)                            | дата рождения                        |
 | phone                | string (format: phone)                           | телефон                              |
 | email                | string (format: email)                           | email                                |
 
-5.	залы/halls         
+5.	Информация о зале кинотеатра         
 
-Информация о залах кинотеатра         
+залы (halls)         
 
 | Имя                  | Тип                                              | Описание поля                            |
 |----------------------|--------------------------------------------------|------------------------------------------|
-| hallID               | integer                                          | идентификатор зала                       |
-| hallName             | string (format: Name)                            | название зала                            |
-| capacity             | string (format: Date)                            | количество мест                          |
+| hallId               | integer                                          | идентификатор зала                       |
+| hallName             | string                                           | название зала                            |
+| capacity             | integer                                          | количество мест                          |
 | hallType             | string (enum: IMAX, VIP, Standart)               | тип зала (список: IMAX, VIP, Стандартный)|
 
-6.	места/seats
+6.	Информация о месте в зале кинотеатра
 
-Информация о местах в зале кинотеатра
+места (seats)
 
 | Имя                  | Тип                                              | Описание поля                                          |
 |----------------------|--------------------------------------------------|--------------------------------------------------------|
-| seatID               | integer                                          | ссылка на идентификатор меcта                          |
-| hallID               | integer                                          | идентификатор зала                                     |
+| seatId               | integer                                          | ссылка на идентификатор меcта                          |
+| hallId               | integer                                          | идентификатор зала                                     |
 | rowNumber            | integer                                          | номер ряда                                             |
 | seatNumber           | integer                                          | номер места                                            |
 | seatType             | string, (enum: chair, sofa, disabledPersonChair) | тип места (список: кресло, диван, место для инвалидов) |
 | seatPrice            | string (format: Money)                           | стоимость места                                        |
-
-7.	занятые места/occupiedSeats
-
-Связь между бронями и местами
-
-| Имя                  | Тип                                              | Описание поля                                          |
-|----------------------|--------------------------------------------------|--------------------------------------------------------|
-| occupiedSeats ID     | integer                                          | идентификатор занятого места                           |
-| bookingID            | integer                                          | ссылка на идентификатор бронирования                   |
-| seatID               | integer                                          | ссылка на идентификатор места                          |
 
 #### 2. Взаимодействие с API
 
@@ -171,34 +164,52 @@
 
 #### 3. Действия API
 
-* проверить доступные места;
-* забронировать место;
-* отменить бронь;
-* изменить время сеанса (администратор).
+* получить список сеансов
+* проверить доступные места
+* забронировать место
+* отменить бронь
+* изменить время сеанса (администратор)
 
 #### 4. HTTP методы API
 
-* GET-проверить доступные места;
-* POST-забронировать место;
-* DELETE-отменить бронь;
-* PATCH-изменить время сеанса (администратор).
+* GET-получить список сеансов
+* GET-проверить доступные места
+* POST-забронировать место
+* DELETE-отменить бронь
+* PATCH-изменить время сеанса (администратор)
 
 #### 5. Ресурсы API
 
-* GET/sessions/{sessionID}/seats;
-* POST/bookings;
-* DELETE/bookings/{bookingID};
-* PATCH/sessions/{sessionID}.
+* GET /sessions
+* GET /sessions/{sessionID}/seats
+* POST /bookings
+* DELETE /bookings/{bookingID}
+* PATCH /admin/sessions/{sessionID}
 
 #### 6. Параметры запросов и ответов для методов HTTP
 
-**1. GET/sessions/{sessionID}/seats**
+**1. GET /sessions**
+
+| Параметры запроса| Тело запроса     | Параметры ответа (массив)            |
+|------------------|------------------|--------------------------------------|
+| sessionDate      | -                | sessionID                            |
+| sessionFormat    | -                | movieID                              |
+| movieName        | -                | hallID                               |
+| genre            | -                | sessionDate                          |
+| hallType         | -                | sessionStartTime                     |
+| hallName         | -                | sessionEndTime                       |
+| limit            | -                | sessionFormat                        |
+| offset           | -                | numberAvailableSeats                 |
+| -                | -                | numberSelectedSeats                  |
+| -                | -                | numberOccupiedSeats                  |
+
+**2. GET /sessions/{sessionID}/seats**
 
 | Параметры запроса| Тело запроса     | Параметры ответа                     |
 |------------------|------------------|--------------------------------------|
 | sessionID        | -                | sessionID                            |
-| -                | -                | movieID                              |
-| -                | -                | hallID                               |
+| limit            | -                | movieID                              |
+| offset           | -                | hallID                               |
 | -                | -                | sessionDate                          |
 | -                | -                | sessionStartTime                     |
 | -                | -                | sessionEndTime                       |
@@ -207,25 +218,26 @@
 | -                | -                | numberSelectedSeats                  |
 | -                | -                | numberOccupiedSeats                  |
   
-**2. POST/bookings**
+**3. POST /bookings**
    
 | Параметры запроса| Тело запроса     | Параметры ответа                     |
 |------------------|------------------|--------------------------------------|
 | -                | sessionsID       | bookingID                            |
 | -                | seatID           | userID                               |
 | -                | userID           | sessionID                            |
+| -                | -                | seatID                               |
 | -                | -                | bookingDateTime                      |
 | -                | -                | numberTicketsBooked                  |
 | -                | -                | totalCostBooking                     |
 | -                | -                | status                               |
   
-**3. DELETE/bookings/{bookingID}**
+**4. DELETE /bookings/{bookingID}**
 
 | Параметры запроса| Тело запроса     | Параметры ответа                     |
 |------------------|------------------|--------------------------------------|
 | bookingID        | -                | status                               |
   
-**4. PATCH/sessions/{sessionID}**
+**5. PATCH /admin/sessions/{sessionID}**
 
 | Параметры запроса| Тело запроса     | Параметры ответа                     |
 |------------------|------------------|--------------------------------------|
@@ -239,6 +251,10 @@
 | -                | -                | numberAvailableSeats                 |
 | -                | -                | numberSelectedSeats                  |
 | -                | -                | numberOccupiedSeats                  |
+
+### ER-диаграмма
+
+![ER-диаграммы кинотеатра](erDiagram_cinema.png)
 
 ### Решение 2, 3
 
